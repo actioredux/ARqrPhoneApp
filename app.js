@@ -221,9 +221,9 @@ async function splitAndDecypherData(qrcontent) {
 // Send cyphertext to backend for decryption end echo back
 async function sendEncryptedStringToBackend(ciphertext) {
   const encryptedPayload = JSON.stringify({ encrypted: ciphertext })
-  alert("Sending playload to backend :\n" + payload);
+  alert("Sending playload to backend :\n" + encryptedPayload);
   try {
-      const response = await fetch(API_BASE + '/api/decrypt', {
+      const serverResponse = await fetch(API_BASE + '/api/decrypt', {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
@@ -231,8 +231,8 @@ async function sendEncryptedStringToBackend(ciphertext) {
       },
       body: encryptedPayload
     });
-    const data = await response.json();
-    alert('Decrypted data recieved : ' + data.decrypted);
+    const data = await serverResponse.json();
+    alert('Decrypted data recieved : ' + data);
     return data.decrypted;
   } catch(err) {
     alert('Decryption/echo Error: ' + err.message);
