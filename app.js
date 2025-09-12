@@ -1,6 +1,6 @@
 
 
-// ACTIOREDUX VERSION 0.2
+// ACTIOREDUX VERSION 0.2 branch preview test
 
 // Simple QR Code Scanner App with Authentication
 // Requires: jsQR.js from library in folder
