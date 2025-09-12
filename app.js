@@ -113,7 +113,7 @@ document.getElementById('start-scan-btn').addEventListener('click', () => {
 });
 
 async function startQRScanner() {
-  alert("Starting QR Scanner, testing alerts");
+  //alert("Starting QR Scanner, testing alerts");
   try {
     videoStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
     video.srcObject = videoStream;
@@ -140,56 +140,46 @@ function stopQRScanner() {
 // QR scanning loop 
 let loop = 0;
 let debugMsg = "";
-function tick() {
+async function tick() {
   loop++;
   if (!scanning){
     qrStatus.textContent = "Scanning stopped at loop "+loop;
     return; // exit loop if scanning === false
   } 
-  //qrStatus.textContent = `____inside tick loop  ${loop}`;
   if (video.readyState === video.HAVE_ENOUGH_DATA) {
-    qrStatus.textContent = "Scanning for QR code loop "+loop;
+    qrStatus.textContent = "Video ready, Scanning for QR code loop "+loop;
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     let code = null;
     try {
       code = jsQR(imageData.data, imageData.width, imageData.height);
     } catch (err) {
-      debugMsg += ` | jsQR error: ${err.message}`;
       alert("jsQR error: " + err.message);
     }
-    //debugMsg += code ? ` | QR found: ${JSON.stringify(code)}` : ' | No QR detected';
-    debuginfo.textContent = debugMsg;
-
-    if (code) { // found a QR code
-      debugMsg += ' | QR code Lock : ' + JSON.stringify(code);
+    if (code) { 
+      // found a QR code (either valid or invalid)
       stopQRScanner(); // Freeze camera
       qrResult.textContent = "Got QR Code lock : \n" + code.data;
       if (isValidQR(code.data)) {
-        // Ask for confirmation
-        if (window.confirm("Valid QR Code lock :\n\n" + code.data + " \n\n Send to server?" )) {
-          // Split and decrypt
+        // case valid QR, asking confirmation to send to server
+        if (window.confirm("Valid QR Code lock :\n\n" + code.data + " \n\n Send to server?" )) { 
           let echoedQrData;
           try {
             alert("now sending to server :\n" + code.data);
-            echoedQrData = splitAndDecypherData(code.data);
+            echoedQrData = await splitAndDecypherData(code.data); //Recieving decrypted data from server
             alert("recieved from server :\n" + echoedQrData );
           }
           catch (err) {
-            debugMsg += ' | Error at splitAndDecypherData(code.data): ' + err.message;
-            debuginfo.textContent = debugMsg;
             alert("Error at splitAndDecypherData(code.data): " + err.message);
             qrResult.textContent = "Error at splitAndDecypherData(code.data): :\n\n" + err.message;
           }
           document.getElementById('decrypted-content').textContent ="Decrypted QR :\n"+ echoedQrData;
           return; // confirmation ends, no further scanning until user acts
         } else {"waiting for user window confirmation";}
-      } else { // invalid QR
-        debugMsg += ' | Invalid QR code: ' + code.data;
-        debuginfo.textContent = debugMsg;
+      } else { 
+        // case invalid QR
         alert("Invalid QR Code:\n\n" + code.data);
         qrResult.textContent = "Got Invalid QR Code :\n\n" + code.data;
         return; // Will resume scanning when user clicks start scanner button again
@@ -200,17 +190,14 @@ function tick() {
   //debuginfo.textContent = debugMsg + ' | [tick] End loop #' + loop;
 };
 
-
 // DATA PROCESSING
-// Is Valid QR?
-function isValidQR(qrcontent) {
+function isValidQR(qrcontent) { // Valid QR are those containing QRHEADER
   if (qrcontent.includes(QRHEADER)) {
     return true
   } else {
     return false; 
   }
 };
-
 // Entry point for DECRYPTION LOGIC // QR Split and decode
 // asuming format is "QRHEADER"+"whatever"+"?cypherdata=encryptedData"
 async function splitAndDecypherData(qrcontent) {
@@ -233,24 +220,26 @@ async function splitAndDecypherData(qrcontent) {
 // QR DECRYPTION 
 // Send cyphertext to backend for decryption end echo back
 async function sendEncryptedStringToBackend(ciphertext) {
+  const encryptedPayload = JSON.stringify({ encrypted: ciphertext })
+  alert("Sending playload to backend :\n" + payload);
   try {
-    fetch(API_BASE + '/api/decrypt', {
+      const response = await fetch(API_BASE + '/api/decrypt', {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + accessToken 
       },
-      body: JSON.stringify({ encrypted: ciphertext })
-    })
-      .then(r => r.json())
-      .then(response => {
-        alert('Decrypted data recieved : ' + response.decrypted);
-        return response.decrypted;
-      });
-    } catch(err) {
-      alert('Decryption/echo Error: ' + err.message);
-      return "DECRYPTION FAILED";
-    };    
+      body: encryptedPayload
+    });
+    const data = await response.json();
+    alert('Decrypted data recieved : ' + data.decrypted);
+    return data.decrypted;
+  } catch(err) {
+    alert('Decryption/echo Error: ' + err.message);
+    return "DECRYPTION FAILED";
+  };    
 };
+
+
 
 }); // end of DOMContentLoaded event listener

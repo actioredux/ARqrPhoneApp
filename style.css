@@ -24,8 +24,8 @@ button {
   border: 1px solid #030436;
   padding: 10px 10px;
   cursor: pointer;
-  height: 6em;
-  width: 10em;
+  height: 3em;
+  width: 6em;
   margin: 0 auto;
   display: block;
 }
@@ -61,5 +61,9 @@ button:active {
   font-size: 2em;
   color: #861807;
   cursor: pointer;
-  padding: 2px 6px;
-}
+  padding: 2px;
+  width: 8px;
+  height: 8px;
+  background: transparent;
+  text-align: center;
+} 
