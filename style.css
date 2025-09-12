@@ -50,7 +50,7 @@ button:active {
   color: #333;
 }
 #app-version {  
-  margin: 5px;
+  margin-right: auto;
   font-size: 0.8em;
   color: #555;
 }

@@ -1,4 +1,7 @@
 
+
+// ACTIOREDUX VERSION 0.2
+
 // Simple QR Code Scanner App with Authentication
 // Requires: jsQR.js from library in folder
 // Requires: <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.2.0/crypto-js.min.js"></script>
@@ -6,20 +9,20 @@
 
 /*
   This Frontend is deployed through Netlify
-    - access through qdiscan.netlify.app
+    - access through arqdiscan.netlify.app
     - maybe serve jsQR library in HTML directly instead of npm install
     - CDN: <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
     */ 
 
 // App version for cache busting and update control
-const APP_VERSION = 'v1.0.1'; // Increment this on every deploy
+const APP_VERSION = 'v1.0.2'; // Increment this on every deploy
 
 // Register service worker
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js?v=' + APP_VERSION)
     .then(reg => {
       // Optionally, force update check
-      reg.update && reg.update();
+      //reg.update && reg.update();
     });
 }
 
@@ -27,6 +30,9 @@ if ('serviceWorker' in navigator) {
 const API_BASE = "https://qdiappexpressbackend.onrender.com";
 // Define QR header (QR is valid only if contains this string)
 const QRHEADER = "QRHEADER"; // header for valid QR content
+
+
+document.addEventListener('DOMContentLoaded', function() { // Ensure DOM is loaded before accessing elements
 
 // index.html elements
 const loginBtn = document.getElementById('login-btn');
@@ -43,16 +49,17 @@ let accessToken = null;
 let scanning = true;
 let videoStream = null;
 
-// versioning
-document.getElementById('app-version').textContent = 'ApVer : ' + APP_VERSION;
-// Close app button handler
-document.getElementById('close-app-btn').addEventListener('click', () => {
-  if (window.confirm('Close the app?')) {
-    window.close();
-    // Fallback for browsers that block window.close()
-    document.body.innerHTML = '<h2>App closed.</h2>';
-  }
-});
+
+  // versioning
+  document.getElementById('app-version').textContent = 'ApVer : ' + APP_VERSION;
+  // Close app button handler
+  document.getElementById('close-app-btn').addEventListener('click', () => {
+    if (window.confirm('Close the app?')) {
+      window.close();
+      // Fallback for browsers that block window.close()
+      document.body.innerHTML = '<h2>App closed.</h2>';
+    }
+  });
 
 // USER LOGIN
 loginBtn.addEventListener('click', async () => {
@@ -244,3 +251,5 @@ async function sendEncryptedStringToBackend(ciphertext) {
       return "DECRYPTION FAILED";
     };    
 };
+
+}); // end of DOMContentLoaded event listener
