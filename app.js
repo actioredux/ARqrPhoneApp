@@ -44,22 +44,23 @@ const ctx = canvas.getContext('2d');
 const qrStatus = document.getElementById('qr-status');
 const qrResult = document.getElementById('qr-result');
 const debuginfo = document.getElementById('debug-info');
+const closeAppBtn = document.getElementById('closeAppBtn');
 
 let accessToken = null;
 let scanning = true;
 let videoStream = null;
 
 
-  // versioning
-  document.getElementById('app-version').textContent = 'ApVer : ' + APP_VERSION;
-  // Close app button handler
-  document.getElementById("closeAppBtn").addEventListener('click', () => {
-    if (window.confirm('Close the app?')) {
-      window.close();
-      // Fallback for browsers that block window.close()
-      document.body.innerHTML = '<h2>App closed.</h2>';
-    }
-  });
+// versioning
+document.getElementById('app-version').textContent = 'ApVer : ' + APP_VERSION;
+// Close app button handler
+closeAppBtn.addEventListener('click', () => {
+  if (window.confirm('Close the app?')) {
+    window.close();
+    // Fallback for browsers that block window.close()
+    document.body.innerHTML = '<h2>App closed.</h2>';
+  }
+});
 
 // USER LOGIN
 loginBtn.addEventListener('click', async () => {
