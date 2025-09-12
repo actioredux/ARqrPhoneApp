@@ -231,9 +231,10 @@ async function sendEncryptedStringToBackend(ciphertext) {
       },
       body: encryptedPayload
     });
-    const data = await serverResponse.json();
-    alert('Decrypted data recieved : ' + JSON.stringify(data));
-    return data.decrypted;
+    const response = await serverResponse.json();
+    alert('Decrypted data recieved : ' + JSON.stringify(response));
+    const decryptedData = response.data;
+    return decryptedData; 
   } catch(err) {
     alert('Decryption/echo Error: ' + err.message);
     return "DECRYPTION FAILED";
