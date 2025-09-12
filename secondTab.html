@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Decrypted Data</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: sans-serif; }
+    #decrypted-data { margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <h2>Recieved Data</h2>
+  <div id="decrypted-data" style="display: block;">...</div>
+  <form id="extraForm">
+    <label>Field 1:<br><input type="text" id="tab2field1" required></label><br><br>
+    <label>Field 2:<br><input type="text" id="tab2field2" required></label><br><br>
+    <button type="submit">Submit</button>
+  </form>
+  <div id="result"></div>
+  <script>
+    // This script will be updated by the opener
+    document.getElementById('extraForm').onsubmit = function(e) {
+      e.preventDefault();
+      const f1 = document.getElementById('tab2field1').value;
+      const f2 = document.getElementById('tab2field2').value;
+      document.getElementById('result').textContent = 'Submitted: ' + f1 + ', ' + f2;
+    };
+  </script>
+</body>
+</html>

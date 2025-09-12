@@ -1,0 +1,16 @@
+{
+  "name": "PWA QR App with JWT",
+  "short_name": "QRAppJWT",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3498db",
+  "description": "A simple PWA with login and QR scanning using JWT authentication.",
+  "icons": [
+    {
+      "src": "appIcon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

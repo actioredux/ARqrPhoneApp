@@ -1,0 +1,74 @@
+
+qrPhoneApp:
+
+## 📱 Overview
+ built a **Progressive Web App (PWA)** that:
+- Runs in the browser (frontend, pure JavaScript + HTML).
+- Lets users **log in** with username/password.
+- Uses **JWT (JSON Web Token)** for secure authentication.
+- Can **scan QR codes** with the smartphone camera (via `jsQR`).
+- Sends scanned QR results securely to your backend.
+
+It works locally now, but can later be deployed online (with HTTPS) so it installs like a native app. (e.g. Netlify + Render)
+
+---
+
+## 🗂 Project Structure
+
+### Frontend (PWA)
+- `index.html` → App entry point
+- `app.js` → Handles login, QR scanning, fetch requests
+- `manifest.json` → Defines app name, icon, installability
+- `sw.js` → Service worker (needed for PWA)
+- `appIcon.png` → Custom app icon
+- `jsQR.js` -> js QR reader package
+
+### Backend (Node.js + Express)
+- `server.js` → Express server with:
+  - `/auth/login` → Issues JWT on successful login
+  - `/api/qr` → Protected endpoint for QR results
+- `package.json` → Dependencies: `express`, `cors`, `jsonwebtoken`, (`body-parser`)
+
+---
+
+
+Debug mode:
+    To run app:
+        1) computer frontEnd Terminal  in _JS_Projects/qrPhoneApp/ :
+            >serve -l 5000 (or serve .) 
+                (run the frontend at http//localhost:5000 or whatever port it has choosen)
+        
+        2) computer backend treminal in _JS_Projects/qrPhoneApp/backendTesting/
+            >node server.js (run the backend at http/localhost:3000)
+
+        3) Access App on phone:
+            * phone and computer must share the same wifi
+            * find computer local ip adresse 
+                (e.g. >ipconfig --> ipV4 : 192.168.178.21),
+            * on the phone browser (chrome, safari, firefox) enter:
+                http://192.168.178.21:5000
+            * app should load
+            
+        4) Install App on phone:
+            if Android (Chrome / Edge / Brave):
+                Open the app URL in Chrome (e.g. http://192.168.178.21:5000 or whatever port serve . has choosen)
+                tap the (...) menu
+                Select “Add to Home screen” or “Install app”
+                A shortcut with your app’s name and icon will appear on your home screen
+            if iphone (safari)
+                Open the app URL in Safari.
+                Tap the Share icon (square with an arrow ↑).
+                Scroll down and select “Add to Home Screen”.
+                Enter a name and tap Add.
+                The app now appears on your home screen and opens in its own window (not in Safari tabs).
+            
+            Login with alice / 1234 or bob / abcd
+
+
+In production:
+
+   * Both frontend (PWA) and backend (Express API) are deployed on a server with HTTPS
+   * Your phone can access it from anywhere (Wi-Fi, 4G/5G, etc.)
+   * The PWA can be installed on the phone like a native app, with your custom icon and offline capabilities.
+
+   Deployment: ask chatgpt how to deploy on Netlify + Render (backend + frontend)

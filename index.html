@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>_qdiscan PWA App_</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+  <div id ="header-div">
+    <h2>_qdiscan PWA App___</h2>
+    <span id="app-version" style="display: inline;">version.</spanp>
+    <button id="close-app-btn" title="Close App" >x</button>
+  </div>
+  
+
+  <div id="login-section">
+    <h2>Login</h2>
+    <input id="username" placeholder="Username" value="alice">
+    <input id="password" type="password" placeholder="Password" value="1234">
+    <button id="login-btn">Login</button>
+    <p id="login-status"></p>
+  </div>
+
+  <div id="welcome-section" style="display:none;">
+    <p id="welcome-msg">welcome user</p>
+    <!--TODO: <button id="logout-btn">Logout</button> -->
+  </div>
+
+  <div id="start-scan-div" style="display:none;">
+     <button id="start-scan-btn"> Start QR Scan </button>
+  </div>
+  
+  <div id="scanner-div" style="display:none;">
+    <video id="video" autoplay></video>
+    <canvas id="canvas" hidden></canvas>
+  </div>
+
+  <div id="info-div" style="display:block;">
+    <p id="qr-status">qr-status.....</p>
+    <p id="qr-result">qr-result.....</p>
+  </div>
+
+  <div id="debug-div" style="display:block; border:3px solid black">
+    <h3>Debug Info</h3>
+    <p id="debug-info">debug-info.....</p>
+  </div>
+
+  <div id="qr-decrypted" style="display:block;">
+    <h2>Decrypted QR Data:</h2>
+    <p id="decrypted-content"></p>
+  </div>
+
+  <!-- TODO: future features
+  
+  <button id="logout-btn" style="display:none;">Logout</button>
+  
+  -->
+
+  <!-- <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script> -->
+  <script src="jsQR.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

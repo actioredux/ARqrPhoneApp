@@ -1,0 +1,65 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background: #f4f4f4;
+}
+h1 { color: #333; }
+#login-section, #qr-section {
+  margin-top: 20px;
+  padding: 15px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+video {
+  width: 100%;
+  max-height: 300px;
+  border: 1px solid #ccc;
+}
+
+button {
+  font-size: 1em;
+  background: #0208a7;
+  color: white;
+  border: 1px solid #030436;
+  padding: 10px 10px;
+  cursor: pointer;
+  height: 6em;
+  width: 10em;
+  margin: 0 auto;
+  display: block;
+}
+button:hover {
+  background: #085fbb;
+}
+button:active {
+  background: #801100;
+}
+#header-div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 10px;
+  background-color: #e0e0e0;
+  border-bottom: 2px solid #737272;
+  color: #333;
+}
+#header-div h2 {
+  margin: 5px;
+  font-size: 1em;
+  color: #333;
+}
+#app-version {  
+  margin: 5px;
+  font-size: 0.8em;
+  color: #555;
+}
+#close-app-btn {
+  margin-left: auto;     /* ensures clips to right edge */
+  border: 2px solid rgb(2, 5, 42);
+  border-radius: 4px;
+  font-size: 2em;
+  color: #861807;
+  cursor: pointer;
+  padding: 2px 6px;
+}
