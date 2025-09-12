@@ -54,7 +54,7 @@ button:active {
   font-size: 0.8em;
   color: #555;
 }
-#close-app-btn {
+#closeAppBtn {
   margin-left: auto;     /* ensures clips to right edge */
   border: 2px solid rgb(2, 5, 42);
   border-radius: 4px;

@@ -53,7 +53,7 @@ let videoStream = null;
   // versioning
   document.getElementById('app-version').textContent = 'ApVer : ' + APP_VERSION;
   // Close app button handler
-  document.getElementById('close-app-btn').addEventListener('click', () => {
+  document.getElementById("closeAppBtn").addEventListener('click', () => {
     if (window.confirm('Close the app?')) {
       window.close();
       // Fallback for browsers that block window.close()
