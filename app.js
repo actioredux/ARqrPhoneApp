@@ -1,35 +1,58 @@
 
 
-// ACTIOREDUX VERSION 0.2 branch preview test
-
-// Simple QR Code Scanner App with Authentication
-// Requires: jsQR.js from library in folder
-// Requires: <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.2.0/crypto-js.min.js"></script>
-
-
 /*
-  This Frontend is deployed through Netlify
-    - access through arqdiscan.netlify.app
+
+ACTIOREDUX VERSION on branch preview
+Frontend PWA : qrCode Scanner App with JWR Authentication
+
+-> https://preview--arqdiscan.netlify.app/ or localhost:5500 for local test
+ 
+Requires: jsQR.js from library in folder
+Requires: <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.2.0/crypto-js.min.js"></script>
+
     - maybe serve jsQR library in HTML directly instead of npm install
     - CDN: <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
-    */ 
+Debug:
+  - in backend terminal (qrAppExpressBackend): > node server.js
+  - in frontend terminal (ARqrPhoneApp): > serve .
 
-// App version for cache busting and update control
-const APP_VERSION = 'v1.0.2'; // Increment this on every deploy
+  - require npm install -g serve (frontend mini static server)
+
+  - access through link provided by serve .
+  - make sure backend server is running on localhost:3000: > node server.js 
+  - use alice/1234 or bob/abcd to login
+  - stop backend: Ctrl+C
+  - stop frontend: Ctrl+C
+
+    
+*/ 
+
+const debug = true;           // debug in localhost
+const APP_VERSION = 'v1.0.2'; // App version for cache busting and update control
+const QRHEADER = "QRHEADER";  // header in qr, defines a valid QR
+
+if (debug) {
+  console.log("Debug mode on localhost ON, access through: >serve .");
+  console.log("(make sure backend server is running on localhost:3000: > node server.js )");
+}
 
 // Register service worker
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js?v=' + APP_VERSION)
     .then(reg => {
-      // Optionally, force update check
-      //reg.update && reg.update();
+      //reg.update && reg.update(); //Optionally, force update check on netlify deploy
     });
 }
 
-// Connect to backend on Render
-const API_BASE = "https://qdiappexpressbackend.onrender.com";
-// Define QR header (QR is valid only if contains this string)
-const QRHEADER = "QRHEADER"; // header for valid QR content
+if (debug) {
+  // localhost debug
+  console.log("Service worker registered");
+  const API_BASE = "http://localhost:3000";
+} else {
+  // Connect to backend on Render
+  console.log("Service worker registered");
+  const API_BASE = "https://qdiappexpressbackend.onrender.com";
+}
 
 
 document.addEventListener('DOMContentLoaded', function() { // Ensure DOM is loaded before accessing elements
@@ -52,7 +75,7 @@ let videoStream = null;
 
 
 // versioning
-document.getElementById('app-version').textContent = 'ApVer : ' + APP_VERSION;
+document.getElementById('app-version').textContent = 'ApVersion : ' + APP_VERSION;
 // Close app button handler
 closeAppBtn.addEventListener('click', () => {
   if (window.confirm('Close the app?')) {
