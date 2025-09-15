@@ -32,8 +32,9 @@ const APP_VERSION = 'v1.0.2'; // App version for cache busting and update contro
 const QRHEADER = "QRHEADER";  // header in qr, defines a valid QR
 
 if (debug) {
-  console.log("Debug mode on localhost ON, access through: >serve .");
-  console.log("(make sure backend server is running on localhost:3000: > node server.js )");
+  console.log("Localhost Debug mode ON, access through: frontendTerminal > serve -l 5500 ");
+  console.log(" --> Run the frontend in browser at http//localhost:5500 ");
+  console.log("(make sure backend server is running on localhost:3000: backendTerminal > node server.js )");
 }
 
 // Register service worker
@@ -44,14 +45,15 @@ if ('serviceWorker' in navigator) {
     });
 }
 
+let API_BASE;
 if (debug) {
   // localhost debug
-  console.log("Service worker registered");
-  const API_BASE = "http://localhost:3000";
+  API_BASE = "http://localhost:3000";
+  console.log("Service worker registered, API_BASE set to " + API_BASE);
 } else {
   // Connect to backend on Render
   console.log("Service worker registered");
-  const API_BASE = "https://qdiappexpressbackend.onrender.com";
+  API_BASE = "https://qdiappexpressbackend.onrender.com";
 }
 
 
@@ -92,6 +94,7 @@ loginBtn.addEventListener('click', async () => {
   loginStatus.textContent = '... Attempting login ... Serveur waking  up ...';
   try {
     // to server query
+    console.log("Attempting login for ", username, " @", API_BASE);
     const res = await fetch(API_BASE+'/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -109,7 +112,8 @@ loginBtn.addEventListener('click', async () => {
     scannerDiv.style.display = 'block'; // start scanner View
 
   } catch (err) {
-    loginStatus.textContent = 'Error: ' + err.message;
+    loginStatus.textContent = API_BASE+' Login Error: ' + err.message;
+    console.error("Login error details:", err);
   }
 });
 
@@ -136,7 +140,6 @@ document.getElementById('start-scan-btn').addEventListener('click', () => {
 });
 
 async function startQRScanner() {
-  //alert("Starting QR Scanner, testing alerts");
   try {
     videoStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
     video.srcObject = videoStream;
@@ -144,8 +147,7 @@ async function startQRScanner() {
     video.play();
     scanning = true;
     qrStatus.textContent = "Scanning for QR code.";
-    requestAnimationFrame(tick); // Initiating scan loop
-    
+    requestAnimationFrame(tick); // Initiating scan loop  
   } catch (err) {
     qrStatus.textContent = "Camera error: " + err.message;
   }
@@ -179,6 +181,7 @@ async function tick() {
     try {
       code = jsQR(imageData.data, imageData.width, imageData.height);
     } catch (err) {
+      console.log("jsQR error: " + err);
       alert("jsQR error: " + err.message);
     }
     if (code) { 
@@ -190,11 +193,12 @@ async function tick() {
         if (window.confirm("Valid QR Code lock :\n\n" + code.data + " \n\n Send to server?" )) { 
           let echoedQrData;
           try {
-            alert("now sending to server :\n" + code.data);
+            console.log("Now sending data to server : " , code.data);
             echoedQrData = await splitAndDecypherData(code.data); //Recieving decrypted data from server
-            alert("recieved from server :\n" + echoedQrData );
+            console.log("Recieved back from server : " , echoedQrData );
           }
           catch (err) {
+            console.log("Error at splitAndDecypherData(code.data) : " , err);
             alert("Error at splitAndDecypherData(code.data): " + err.message);
             qrResult.textContent = "Error at splitAndDecypherData(code.data): :\n\n" + err.message;
           }
@@ -203,7 +207,7 @@ async function tick() {
         } else {"waiting for user window confirmation";}
       } else { 
         // case invalid QR
-        alert("Invalid QR Code:\n\n" + code.data);
+        alert("Found invalid QR Code:\n\n" + code.data);
         qrResult.textContent = "Got Invalid QR Code :\n\n" + code.data;
         return; // Will resume scanning when user clicks start scanner button again
       }
@@ -230,10 +234,13 @@ async function splitAndDecypherData(qrcontent) {
       return qrcontent; // return as is
     } else {
       const encryptedData = qrcontent.split("?cypherdata=")[1];
-      const header = qrcontent.split("?cypherdata=")[0];
+      const pub =  qrcontent.split("?cypherdata=")[0];
+      const header = pub.split(" ;")[0];
+      const publicData = pub.split(" ;")[1];
       const decryptedData = await sendEncryptedStringToBackend(encryptedData);
-      console.log("Decrypted data recieved from server : \n", decryptedData);
-      return header + decryptedData;
+      // console.log("Decrypted data recieved from server :", decryptedData);
+      const formatedData = header+"?public="+publicData+"?private="+decryptedData; // format qrData
+      return formatedData
     }
   } catch (err) {
     throw new Error('splitQRData() or Decryption failed :'+ err.message);
@@ -244,7 +251,7 @@ async function splitAndDecypherData(qrcontent) {
 // Send cyphertext to backend for decryption end echo back
 async function sendEncryptedStringToBackend(ciphertext) {
   const encryptedPayload = JSON.stringify({ encrypted: ciphertext })
-  alert("Sending playload to backend :\n" + encryptedPayload);
+  //console.log("Sending playload to backend : " , encryptedPayload);
   try {
       const serverResponse = await fetch(API_BASE + '/api/decrypt', {
       method: 'POST',
@@ -255,10 +262,11 @@ async function sendEncryptedStringToBackend(ciphertext) {
       body: encryptedPayload
     });
     const response = await serverResponse.json();
-    alert('Decrypted data recieved : ' + JSON.stringify(response));
+    //console.log('Decrypted data recieved : ' , JSON.stringify(response));
     const decryptedDataString = JSON.stringify(response.data);
     return decryptedDataString; 
   } catch(err) {
+    console.log('Decryption/echo Error: ' , err);
     alert('Decryption/echo Error: ' + err.message);
     return "DECRYPTION FAILED";
   };    
