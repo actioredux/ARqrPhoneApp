@@ -24,8 +24,8 @@ button {
   border: 1px solid #030436;
   padding: 10px 10px;
   cursor: pointer;
-  height: 6em;
-  width: 10em;
+  height: 3em;
+  width: 6em;
   margin: 0 auto;
   display: block;
 }
@@ -50,16 +50,20 @@ button:active {
   color: #333;
 }
 #app-version {  
-  margin: 5px;
+  margin-right: auto;
   font-size: 0.8em;
   color: #555;
 }
-#close-app-btn {
+#closeAppBtn {
   margin-left: auto;     /* ensures clips to right edge */
   border: 2px solid rgb(2, 5, 42);
   border-radius: 4px;
   font-size: 2em;
   color: #861807;
   cursor: pointer;
-  padding: 2px 6px;
-}
+  padding: 2px;
+  width: 8px;
+  height: 8px;
+  background: transparent;
+  text-align: center;
+} 

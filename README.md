@@ -1,12 +1,12 @@
-# qrPhoneAppV0 Frontend @ qdiscan.netlify.app
+# qrPhoneAppV0 Frontend @ arqdiscan.netlify.app
 
-A simple QR code phone app project.
+A simple QR code phone app project. (actioredux version)
 
 ## Purpose
 qrPhoneAppV0 is a Progressive Web App (PWA) that allows users to log in, scan QR codes using their device camera, and securely send the scanned data to a backend server using JWT authentication. It is designed to work both locally and as an installable app on mobile devices.
 
 ### Frontend Deployed through Netlify  
-   - access through qdiscan.netlify.app
+   - access through arqdiscan.netlify.app
 
 ## qrPhoneApp:📱 Overview
  built a **Progressive Web App (PWA)** that:
